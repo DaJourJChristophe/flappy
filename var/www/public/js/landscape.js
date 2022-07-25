@@ -40,7 +40,7 @@ void function(w, d)
       super(xi, yi, wi, hi);
 
       this.st = 2;
-      this.sc = '#1761c1';
+      this.sc = null;
       this.fc = '#3f89ea';
     }
   };
@@ -52,7 +52,7 @@ void function(w, d)
       super(xi, yi, wi, hi);
 
       this.st = 2;
-      this.sc = '#f00';
+      this.sc = null;
       this.fc = '#d87365';
     }
   };
@@ -76,7 +76,7 @@ void function(w, d)
       super(xi, yi, wi, hi);
 
       this.st = 2;
-      this.sc = '#95989b';
+      this.sc = null;
       this.fc = '#e1e7ef';
     }
   };
@@ -89,7 +89,7 @@ void function(w, d)
       const landscapeCanvasSelector = 'body .pg .cvs.landscape';
       // Create a new draw object to assist with drawing
       // shapes and objects to the canvas for the landscape.
-      this.renderer = new Render(landscapeCanvasSelector, true);
+      this.renderer = new Render(landscapeCanvasSelector);
     }
 
     addImage(img)

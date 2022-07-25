@@ -5,10 +5,6 @@ Copyright (C) 2022 Da'Jour J. Christophe. All rights reserved.
 @charset "utf-8";
 
 * {
-  outline: 1px solid red;
-}
-
-* {
   box-sizing: border-box;
 }
 
