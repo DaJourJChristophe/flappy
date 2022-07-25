@@ -37,14 +37,22 @@ body .pg {
 }
 
 .pg > .ctn {
+  position: relative;
   max-width: 1280px;
   height: 100%;
   margin: 0 auto;
-  padding: 0 15px;
 }
 
-.pg .cvs {
+.pg .cvs,
+.pg .cvs + .cvs {
+  position: absolute;
   display: block;
   width: 100%;
   height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.pg .cvs:first-child {
+  background-color: #9edcf7;
 }

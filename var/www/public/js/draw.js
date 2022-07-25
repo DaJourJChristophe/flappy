@@ -37,6 +37,15 @@ void function(w, d)
       this.ctx.canvas.height = parseFloat(getComputedStyle(cvs).height);
     }
 
+    image(src, x, y, w, h)
+    {
+      let img = new Image();
+      img.addEventListener('load', () => {
+        this.ctx.drawImage(img, x, y, w, h);
+      });
+      img.src = src;
+    }
+
     /*
     Using real unaltered pixel values, draw a square
     onto the canvas.
@@ -47,14 +56,32 @@ void function(w, d)
       this.ctx.fillStyle   = fillColour;
       this.ctx.strokeStyle = strokeColour;
 
+      this.ctx.setLineDash([]);
+
       this.ctx.beginPath();
       this.ctx.rect(x, y, w, h);
-      this.ctx.stroke();
+
+      if (strokeColour)
+      {
+        this.ctx.stroke();
+      }
 
       if (fillColour)
       {
         this.ctx.fill();
       }
+    }
+
+    line(x1, y1, x2, y2, thickness, dash, colour)
+    {
+      this.ctx.lineWidth = thickness;
+      this.ctx.strokeStyle = colour;
+      this.ctx.setLineDash(dash);
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(x1, y1);
+      this.ctx.lineTo(x2, y2);
+      this.ctx.stroke();
     }
   }
 }(window, document);
