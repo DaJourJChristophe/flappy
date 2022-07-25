@@ -24,15 +24,35 @@ void function(w, d)
       this.renderer = new Render(landminesCanvasSelector);
     }
 
-    add(mine)
+    clear()
     {
+      this.renderer.clear();
+    }
+
+    addTop(mine, cb)
+    {
+      const src = '../img/pipe-green-top.png';
       // Draw a square onto the canvas. This represents a single
       // spawned landmine object.
-      this.renderer.square(
+      this.renderer.image(src,
         mine.xi,
         mine.yi,
         mine.wi,
-        mine.hi, 2, '#396b2c', '#719e66');
+        -mine.hi, 52, 320, cb
+      );
+    }
+
+    add(mine, cb)
+    {
+      const src = '../img/pipe-green-bottom.png';
+      // Draw a square onto the canvas. This represents a single
+      // spawned landmine object.
+      this.renderer.image(src,
+        mine.xi,
+        mine.yi,
+        mine.wi,
+        mine.hi, 52, 320, cb
+      );
     }
   };
 }(window, document);

@@ -57,18 +57,6 @@ void function(w, d)
     }
   };
 
-  w.CementBlock = class extends LandscapeObject
-  {
-    constructor(xi, yi, wi, hi)
-    {
-      super(xi, yi, wi, hi);
-
-      this.st = 2;
-      this.sc = null;
-      this.fc = '#edd56a';
-    }
-  };
-
   w.Cloud = class extends LandscapeObject
   {
     constructor(xi, yi, wi, hi)
@@ -89,7 +77,7 @@ void function(w, d)
       const landscapeCanvasSelector = 'body .pg .cvs.landscape';
       // Create a new draw object to assist with drawing
       // shapes and objects to the canvas for the landscape.
-      this.renderer = new Render(landscapeCanvasSelector);
+      this.renderer = new Render(landscapeCanvasSelector, true);
     }
 
     addImage(img)

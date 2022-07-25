@@ -10,38 +10,100 @@ void function(w, d)
   {
     let bird, landscape, minefield;
 
-    landscape = new Landscape();
+    // landscape = new Landscape();
     minefield = new MineField();
-    bird      = new Bird();
+    // bird      = new Bird();
 
-    for (let i = -10; i < 10; i++)
+    // for (let i = -10; i < 10; i++)
+    // {
+    //   landscape.add(new Cloud(i, 2, 1, 1));
+    //   landscape.add(new Building(i, 3, 1, 2));
+    //   landscape.add(new Bush(i, 5, 1, 1));
+    // }
+
+    function getRandomArbitrary(min, max)
     {
-      landscape.add(new Cloud(i, 2, 1, 1));
-      landscape.add(new Building(i, 3, 1, 2));
-      landscape.add(new Bush(i, 5, 1, 1));
-      landscape.addImage(new Block(i, 6, 1, .25));
-      landscape.add(new CementBlock(i, 6.26, 1, 1.34));
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min);
     }
 
+    function mineSingular(x)
+    {
+      let y, w, h;
+      y = getRandomArbitrary(-5, 5);
+      w = 1;
+      h = 14 - Math.abs(y);
+      return { x:x, y:y, w:w, h:h };
+    }
 
+    function minePartner(x, y, w, h)
+    {
+      const gap = 1;
+      y = y + gap; h = 6 + -y;
+      return { x:x, y:y, w:w, h:h };
+    }
 
-    minefield.add(new Mine(-5, -7.64, 1, 2.64));
-    minefield.add(new Mine(-5, -3, 1, 9));
+    const distance = 4;
 
-    minefield.add(new Mine(-2, -7.64, 1, 4.64));
-    minefield.add(new Mine(-2, -1, 1, 7));
+    var mineTopCache = new Array();
+    var mineBottomCache = new Array();
+    let dim, mine;
 
-    minefield.add(new Mine(1, -7.64, 1, 3.64));
-    minefield.add(new Mine(1, -2, 1, 8));
+    let innerLoop, outerLoop, onawait, onresolve;
 
-    minefield.add(new Mine(4, -7.64, 1, 5.64));
-    minefield.add(new Mine(4, 0, 1, 6));
+    onresolve = (j,i,n) =>
+    {
+      // recurse
+      innerLoop(j, (i+1), n);
+    };
 
-    minefield.add(new Mine(7, -7.64, 1, 9.64));
-    minefield.add(new Mine(7, 4, 1, 2));
+    onawait = (resolve, i) =>
+    {
+      dim = mineSingular(i);
+      // put image async loads in parallel
+      minefield.addTop(new Mine(dim.x, dim.y, dim.w, dim.h), function() {
+        // mineTopCache.push(mine);
+        dim = minePartner(dim.x, dim.y, dim.w, dim.h);
+        minefield.add(new Mine(dim.x, dim.y, dim.w, dim.h), function() {
+          // mineBottomCache.push(mine);
+          resolve(i);
+        });
+      });
+    };
 
+    innerLoop = (j, i, n) =>
+    {
+      // stop case
+      if (i > n) { outerLoop((j+1)); return; }
 
+      // skip case
+      if (0 !== (i+j) % distance)
+      {
+        innerLoop(j, (i+1), n);
+        return;
+      }
 
-    bird.render();
+      new Promise((resolve) => {
+        onawait.apply(null, [resolve, i]);
+      }).then((i) => {
+        onresolve.apply(null, [j, i, n]);
+      });
+    };
+
+    outerLoop = (j) =>
+    {
+      // stop case
+      if (0) { return; } // while running ..
+
+      setTimeout(() => { // better block? :P
+        minefield.clear();
+        // blocking layer
+        innerLoop(j, -10, 10); // <-- i, n
+      }, 1000);
+    };
+
+    outerLoop(0); // <-- j
+    // bird.render();
   });
 }(window, document);

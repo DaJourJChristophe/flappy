@@ -20,13 +20,21 @@
   <body>
     <div class="pg">
       <div class="ctn">
-        <canvas class="cvs landscape"></canvas>
-        <canvas class="cvs landmines"></canvas>
-        <canvas class="cvs character"></canvas>
+        <div class="cvs-wrp">
+          <canvas class="cvs landscape"></canvas>
+          <canvas class="cvs landmines"></canvas>
+          <canvas class="cvs character"></canvas>
+        </div>
+        <div class="svg-wrp">
+          <figure class="svg-fig">
+            <object class="svg-obj"></object>
+          </figure>
+        </div>
       </div>
     </div>
 
     <script src="../vendor/QUnit/v2.19.1/js/qunit.js"></script>
+    <script src="../js/browser.js"></script>
     <script src="../js/draw.js"></script>
     <script src="../js/grid.js"></script>
     <script src="../js/render.js"></script>
