@@ -1,0 +1,8 @@
+{
+  "manifest_version": 2,
+  "name": "Flappy",
+  "short_name": "Flappy",
+  "description": "Who ever ever said it wasn't more fun to create your own games? So we did just that and created flappy a game based off the game flappybird. Don't worry, no thanks needed, enjoy!",
+  "version": "0.1",
+  "default_locale": "en-US"
+}
