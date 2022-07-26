@@ -37,19 +37,19 @@ void function(w, d)
       this.ctx.canvas.height = parseFloat(getComputedStyle(cvs).height);
     }
 
+    clearRect(x, y, w, h)
+    {
+      this.ctx.clearRect(x, y, w, h);
+    }
+
     clear()
     {
       this.ctx.clear();
     }
 
-    image(src, x, y, w1, h1, w2, h2, cb)
+    image(img, x, y, w1, h1, w2, h2)
     {
-      let img = new Image();
-      img.addEventListener('load', () => {
-        this.ctx.drawImage(img, 0, 0, w2, h2, x, y, w1, h1);
-        cb();
-      });
-      img.src = src;
+      this.ctx.drawImage(img, 0, 0, w2, h2, x, y, w1, h1);
     }
 
     /*

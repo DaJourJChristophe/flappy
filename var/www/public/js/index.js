@@ -10,100 +10,108 @@ void function(w, d)
   {
     let bird, landscape, minefield;
 
-    // landscape = new Landscape();
+    landscape = new Landscape();
     minefield = new MineField();
-    // bird      = new Bird();
+    bird      = new Bird();
 
-    // for (let i = -10; i < 10; i++)
-    // {
-    //   landscape.add(new Cloud(i, 2, 1, 1));
-    //   landscape.add(new Building(i, 3, 1, 2));
-    //   landscape.add(new Bush(i, 5, 1, 1));
-    // }
-
-    function getRandomArbitrary(min, max)
+    for (let i = -10; i < 10; i++)
     {
-      min = Math.ceil(min);
-      max = Math.floor(max);
-      return Math.floor(Math.random() * (max - min) + min);
+      landscape.add(new Cloud(i, 2.51, 1, 1));
+      landscape.add(new Building(i, 3.51, 1, 2));
+      landscape.add(new Bush(i, 5.51, 1, 1));
     }
 
-    function mineSingular(x)
+    class Spawn
     {
-      let y, w, h;
-      y = getRandomArbitrary(-5, 5);
-      w = 1;
-      h = 14 - Math.abs(y);
-      return { x:x, y:y, w:w, h:h };
-    }
-
-    function minePartner(x, y, w, h)
-    {
-      const gap = 1;
-      y = y + gap; h = 6 + -y;
-      return { x:x, y:y, w:w, h:h };
-    }
-
-    const distance = 4;
-
-    var mineTopCache = new Array();
-    var mineBottomCache = new Array();
-    let dim, mine;
-
-    let innerLoop, outerLoop, onawait, onresolve;
-
-    onresolve = (j,i,n) =>
-    {
-      // recurse
-      innerLoop(j, (i+1), n);
-    };
-
-    onawait = (resolve, i) =>
-    {
-      dim = mineSingular(i);
-      // put image async loads in parallel
-      minefield.addTop(new Mine(dim.x, dim.y, dim.w, dim.h), function() {
-        // mineTopCache.push(mine);
-        dim = minePartner(dim.x, dim.y, dim.w, dim.h);
-        minefield.add(new Mine(dim.x, dim.y, dim.w, dim.h), function() {
-          // mineBottomCache.push(mine);
-          resolve(i);
-        });
-      });
-    };
-
-    innerLoop = (j, i, n) =>
-    {
-      // stop case
-      if (i > n) { outerLoop((j+1)); return; }
-
-      // skip case
-      if (0 !== (i+j) % distance)
+      constructor()
       {
-        innerLoop(j, (i+1), n);
-        return;
+        this.cache = new Array();
+        this.distance = 4;
+        this.gap = 1;
+        this.speed = undefined;
+
+        this.maxRenderable = minefield.renderer.grid.scale / this.distance;
+        this.step = Math.pow(minefield.renderer.grid.cell, (-1));
+        this.computedDistance = this.distance * minefield.renderer.grid.cell;
       }
 
-      new Promise((resolve) => {
-        onawait.apply(null, [resolve, i]);
-      }).then((i) => {
-        onresolve.apply(null, [j, i, n]);
-      });
-    };
+      run()
+      {
+        let i = -0.5 * minefield.renderer.grid.scale - this.distance;
+        for (; i < 0.5 * minefield.renderer.grid.scale; i += this.distance)
+        {
+          this.createPipeCouple(i);
+        }
 
-    outerLoop = (j) =>
-    {
-      // stop case
-      if (0) { return; } // while running ..
+        requestAnimationFrame(this.outerLoop.bind(this));
+      }
 
-      setTimeout(() => { // better block? :P
+      outerLoop()
+      {
+        this.createPipeCouple();
+        this.slideLoop(0, this.outerLoop.bind(this));
+      }
+
+      slideLoop(i, cb)
+      {
+        if (i > this.computedDistance) { cb(); return; }
         minefield.clear();
-        // blocking layer
-        innerLoop(j, -10, 10); // <-- i, n
-      }, 1000);
-    };
+        this.cacheLoop();
+        requestAnimationFrame(() => {
+          this.slideLoop((i+1), cb);
+        });
+      }
 
-    outerLoop(0); // <-- j
-    // bird.render();
+      cacheLoop(q)
+      {
+        this.cache = this.cache.map(itm => {
+          itm.xi -= this.step;
+          minefield.addTop(itm);
+          minefield.add(this.minePartner(
+            new Mine(itm.xi, itm.yi, itm.wi, itm.hi)));
+          return itm;
+        });
+      }
+
+      createPipeCouple(x)
+      {
+        if (this.cache.length >= this.maxRenderable)
+        {
+          this.cache.shift();
+        }
+
+        this.cache.push(this.mineSingular(x));
+      }
+
+      minePartner(mine)
+      {
+        mine.yi =  mine.yi + this.gap;
+        mine.hi = -mine.yi + minefield.renderer.grid.cv;
+        return mine;
+      }
+
+      mineSingular(x)
+      {
+        let y, w, h;
+        x = x ? x : (0.5 * minefield.renderer.grid.scale);
+        y = this.getRandomArbitrary(Math.round(-minefield.renderer.grid.cv) + 2,
+                                    Math.round( minefield.renderer.grid.cv) - 2);
+        w = 1;
+        h = y + minefield.renderer.grid.cv;
+        return new Mine(x, y, w, h);
+      }
+
+      getRandomArbitrary(min, max)
+      {
+        min = Math.ceil(min);
+        return Math.floor(Math.random() * (Math.floor(max) - min) + min);
+      }
+    }
+
+    var spawn = new Spawn();
+
+    bird.render();
+
+    spawn.run();
   });
 }(window, document);

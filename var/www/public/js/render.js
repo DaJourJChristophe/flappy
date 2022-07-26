@@ -10,19 +10,29 @@ void function(w, d)
       this.grid = new Grid(this.draw, show);
     }
 
+    clearRect(xi, yi, wi, hi)
+    {
+      this.draw.clearRect(
+        this.grid.x(xi),
+        this.grid.y(yi),
+        this.grid.span(wi),
+        this.grid.span(hi)
+      );
+    }
+
     clear()
     {
       this.draw.clear();
     }
 
-    image(src, xi, yi, wi, hi, w, h, cb)
+    image(img, xi, yi, wi, hi, w, h)
     {
-      this.draw.image(src,
+      this.draw.image(img,
         this.grid.x(xi),
         this.grid.y(yi),
         this.grid.span(wi),
         this.grid.span(hi),
-        w, h, cb
+        w, h
       );
     }
 

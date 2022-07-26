@@ -19,6 +19,9 @@ void function(w, d)
       this.cell  = Math.pow(this.scale, (-1));
       this.cell *= this.w > this.h ? this.w : this.h;
 
+      this.cv    = this.hh * Math.pow(this.cell, (-1));
+      this.ch    = this.hw * Math.pow(this.cell, (-1));
+
       if (show)
       {
         this.show();

@@ -18,11 +18,10 @@ void function(w, d)
 
     render()
     {
-      const src = '../img/yellowbird-midflap.png';
       // Draw a square onto the canvas. This is our primary
       // character block. Users will have control of this
       // block during the games runtime.
-      this.renderer.image(src, -8, -1,
+      this.renderer.image(YELLOWBIRDIMAGE, -8, -1,
         DEFAULT_BIRD_WIDTH, DEFAULT_BIRD_HEIGHT, 34, 24);
     }
   };

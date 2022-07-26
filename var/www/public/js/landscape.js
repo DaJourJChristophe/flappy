@@ -77,7 +77,7 @@ void function(w, d)
       const landscapeCanvasSelector = 'body .pg .cvs.landscape';
       // Create a new draw object to assist with drawing
       // shapes and objects to the canvas for the landscape.
-      this.renderer = new Render(landscapeCanvasSelector, true);
+      this.renderer = new Render(landscapeCanvasSelector);
     }
 
     addImage(img)
