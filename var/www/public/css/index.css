@@ -5,6 +5,10 @@ Copyright (C) 2022 Da'Jour J. Christophe. All rights reserved.
 @charset "utf-8";
 
 * {
+  outline: 1px solid red;
+}
+
+* {
   box-sizing: border-box;
 }
 
@@ -54,12 +58,16 @@ body .pg {
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .svg-wrp .svg-fig > .svg-obj {
   display: block;
-  width: 100%;
+  width: 200%;
   height: 100%;
+
+  transform: translate(50%, 0);
+
   background-image: url('../img/base.png');
   background-attachment: local;
   background-position: top left;
